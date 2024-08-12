@@ -1,0 +1,28 @@
+FROM ubuntu:latest
+
+# Setting dependencies and updating APT repos
+RUN apt-get update -y && \
+	apt-get upgrade -y && \
+	apt-get install -y --no-install-recommends \
+	jq curl htop build-essential wget make git vim ca-certificates && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
+
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN update-ca-certificates
+
+# Creating workdir and copying file into it
+ENV HOME="/story-node"
+WORKDIR /story-node
+
+# Copying entrypoint
+COPY config/geth/start_node.sh /story-node/start_node.sh
+RUN chmod +x start_node.sh
+
+EXPOSE 8551
+EXPOSE 8545
+EXPOSE 8546
+EXPOSE 6060
+EXPOSE 30303
+
+ENTRYPOINT ["/story-node/start_node.sh"]
