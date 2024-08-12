@@ -1,0 +1,43 @@
+services:
+  story-testnet-geth:
+    image: story-testnet-geth:v0.1.5
+    build:
+      context: .
+      dockerfile: Dockerfile.geth
+    restart: unless-stopped
+    container_name: story-testnet-geth
+    volumes:
+      - './geth/:/story-node/geth/'
+      - './jwtsecret:/story-node/geth/data/geth/jwtsecret'
+    expose:
+      - 8551
+    ports:
+      - '8545:8545'
+      - '8546:8546'
+      - '30303:30303'
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  story-testnet-iliad:
+    image: story-testnet-iliad:v0.1.5
+    build:
+      context: .
+      dockerfile: Dockerfile.iliad
+    restart: unless-stopped
+    container_name: story-testnet-iliad
+    volumes:
+      - './iliad:/story-node/iliad/'
+      - './jwtsecret:/story-node/geth/data/geth/jwtsecret'
+    expose:
+      - 8551
+    ports:
+      - '1317:1317'
+      - '26657:26657'
+      - '26656:26656'
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
